@@ -30,6 +30,7 @@ type Race struct {
 	SplitTime        uint   // Split Time in Seconds
 	Boats            []Boat // len(boats) does not need to equal NLanes
 	NLanes           uint   // Number of lanes in this race
+	DurationType     uint   // 0=distance, 1=time?
 }
 
 // Given a list of boats from a race, this will return the boat that is
@@ -49,29 +50,54 @@ func findByLane(boats []Boat, lane uint) Boat {
 }
 
 // Write the race in the format understood by the Concept 2 Venue software
-func (race Race) Write(w io.Writer) {
+func (race Race) Write(w io.Writer) error {
 	// The race won't start if the name is longer than 16 characters
 	maxNameLen := 16
 	if len(race.Name) < maxNameLen {
 		maxNameLen = len(race.Name)
 	}
 
-	fmt.Fprintln(w, FILESIG)                // file type signature
-	fmt.Fprintln(w, FILEVER)                // file format ver 107 including class.
-	fmt.Fprintln(w, race.BoatType)          // team config (singles=0, doubles=1, fours=2, eights=3)
-	fmt.Fprintln(w, race.Name[:maxNameLen]) // race name; see note 1
-	fmt.Fprintln(w, race.Distance)          // distance in meters
-	fmt.Fprintln(w, "0")                    // duration type is distance
-	fmt.Fprintln(w, "0")                    // this line is always zero
-	fmt.Fprintln(w, race.EnableStrokeData)  // 1 = yes, 0 = no
-	fmt.Fprintln(w, race.SplitDistance)     // SplitDistance in Meters
-	fmt.Fprintln(w, race.SplitTime)         // Split Times in Seconds
-	fmt.Fprintln(w, race.NLanes)            // Actual Number of boats in this race (2-40)
+	// file type signature
+	if _, err := fmt.Fprintln(w, FILESIG); err != nil {
+		return err
+	}
+
+	// file format ver 107 including class.
+	if _, err := fmt.Fprintln(w, FILEVER); err != nil {
+		return err
+	}
+	// file type signature
+	// file format ver 107 including class.
+	// team config (singles=0, doubles=1, fours=2, eights=3)
+	// race name; see note 1
+	// distance in meters
+	// Duration Type
+	// Next line is alwas 0
+	if _, err := fmt.Fprintf(w, "%s\n%s\n%d\n%s\n%d\n%d\n0\n",
+		FILESIG, FILEVER, race.BoatType, race.Name[:maxNameLen],
+		race.Distance, race.DurationType); err != nil {
+		return err
+	}
+
+	// EnableStrokeData 1=yes,0=no
+	// SplitDistance in Meters
+	// SplitTimes in Seconds
+	// Actual Number of Boats in this race (2-40)
+	if _, err := fmt.Fprintf(w, "%d\n%d\n%d\n%d\n",
+		race.EnableStrokeData, race.SplitDistance,
+		race.SplitTime, race.NLanes); err != nil {
+		return err
+	}
 
 	for lane := uint(1); lane <= race.NLanes; lane++ {
 		boat := findByLane(race.Boats, lane)
-		boat.Write(w)
+		if err := boat.Write(w); err != nil {
+			return err
+		}
 	}
 
-	fmt.Fprintln(w, "0") // example file has this closing 0
+	// Concept 2 example file has this closing 0
+	_, err := fmt.Fprintln(w, "0")
+
+	return err
 }
