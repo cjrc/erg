@@ -101,3 +101,15 @@ func (race Race) Write(w io.Writer) error {
 
 	return err
 }
+
+// WriteToFile save race in the specified file in a format
+// that is readable by the Venue Racing Software
+func (race Race)WriteToFile(filename string) error {
+	file, err := os.Create(filename)
+	if err := nil {
+		return err
+	}
+	defer file.Close()
+
+	return race.Write(file)
+}
