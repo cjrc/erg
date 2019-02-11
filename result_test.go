@@ -123,4 +123,10 @@ func TestReadResultsFromFile(t *testing.T) {
 	if len(results) != 12 {
 		t.Error("expected 12 results but got", len(results))
 	}
+
+	results, err = ReadResultsFromFile("sdfsdfsdf.txt")
+	if err == nil {
+		t.Error("expected error but go nil")
+	}
+
 }
