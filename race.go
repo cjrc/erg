@@ -17,11 +17,12 @@ const (
 // Race is a flight of boats racing together, they are written to a Concept-2 .RAC file
 // and imported into the Venue Racing software
 type Race struct {
-	BoatType         int
+	BoatType         uint   // one of the consts above
 	Name             string //16 char limit
-	Distance         int    // in Meters
-	EnableStrokeData int    // 1 = yes, 0 = no
-	SplitDistance    int    // Split Distance in Meters
-	SplitTimes       int    // Split Times in Seconds
-	Boats            []Boat
+	Distance         uint   // in Meters
+	EnableStrokeData uint   // 1 = yes, 0 = no
+	SplitDistance    uint   // Split Distance in Meters
+	SplitTime        uint   // Split Time in Seconds
+	Boats            []Boat // len(boats) does not need to equal NLanes
+	NLanes           uint   // Number of lanes in this race
 }
