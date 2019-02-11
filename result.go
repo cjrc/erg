@@ -59,7 +59,7 @@ func ReadResults(results *[]Result, reader io.Reader) error {
 			return fmt.Errorf("invalid race time on line %d: %v", lineNumber, err)
 		}
 
-		tmp = strings.Replace(parts[4], ":", "m", -1) + "s"
+		tmp = strings.TrimSpace(strings.Replace(parts[4], ":", "m", -1) + "s")
 		avgPace, err := time.ParseDuration(tmp)
 		if err != nil {
 			return fmt.Errorf("invalid average pace on line %d: %v", lineNumber, err)
