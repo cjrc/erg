@@ -50,6 +50,10 @@ func findByLane(boats []Boat, lane uint) Boat {
 }
 
 // Write the race in the format understood by the Concept 2 Venue software
+// TODO:
+// These generated race files will not currently work
+// with team boats
+// see https://c2usa.fogbugz.com/?W44
 func (race Race) Write(w io.Writer) error {
 	// The race won't start if the name is longer than 16 characters
 	maxNameLen := 16
