@@ -76,7 +76,7 @@ func (race Race) Write(w io.Writer) error {
 	// race name; see note 1
 	// distance in meters
 	// Duration Type
-	// Next line is alwas 0
+	// Next line is always 0 (was View Mode in older days)
 	if _, err := fmt.Fprintf(w, "%s\n%s\n%d\n%s\n%d\n%d\n0\n",
 		FILESIG, FILEVER, race.BoatType, race.Name[:maxNameLen],
 		race.Distance, race.DurationType); err != nil {
@@ -101,6 +101,8 @@ func (race Race) Write(w io.Writer) error {
 	}
 
 	// Concept 2 example file has this closing 0
+	// It's always 0 for individual races
+	// should be total number of PMs for team races
 	_, err := fmt.Fprintln(w, "0")
 
 	return err
