@@ -12,13 +12,13 @@ import (
 
 // Result represents the race result of one erg from the Venue Racing results file
 type Result struct {
-	Place    int
-	Time     time.Duration
-	AvgPace  time.Duration
-	Distance int
-	Name     string
-	BibNum   int
-	Class    string
+	Place    int           `db:"place"`
+	Time     time.Duration `db:"time"`
+	AvgPace  time.Duration `db:"avg_pace"`
+	Distance int           `db:"distance"`
+	Name     string        `db:"name"`
+	BibNum   int           `db:"bib_num"`
+	Class    string        `db:"class"`
 }
 
 //ReadResults reads the race results from the specified io.Reader and appends them to the
