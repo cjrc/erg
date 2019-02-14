@@ -3,6 +3,7 @@ package erg
 import (
 	"fmt"
 	"io"
+	"os"
 )
 
 // FILESIG Signature used by Concept2 race files
@@ -110,9 +111,9 @@ func (race Race) Write(w io.Writer) error {
 
 // WriteToFile save race in the specified file in a format
 // that is readable by the Venue Racing Software
-func (race Race)WriteToFile(filename string) error {
+func (race Race) WriteToFile(filename string) error {
 	file, err := os.Create(filename)
-	if err := nil {
+	if err != nil {
 		return err
 	}
 	defer file.Close()
