@@ -26,7 +26,7 @@ type Race struct {
 	BoatType         uint   // one of the consts above
 	Name             string //16 char limit
 	Distance         uint   // in Meters
-	EnableStrokeData uint   // 1 = yes, 0 = no
+	EnableStrokeData bool   
 	SplitDistance    uint   // Split Distance in Meters
 	SplitTime        uint   // Split Time in Seconds
 	Boats            []Boat // len(boats) does not need to equal NLanes
@@ -88,8 +88,12 @@ func (race Race) Write(w io.Writer) error {
 	// SplitDistance in Meters
 	// SplitTimes in Seconds
 	// Actual Number of Boats in this race (2-40)
+	strokeData := 0
+	if race.EnableStrokeData {
+		strokeData = 1
+	}
 	if _, err := fmt.Fprintf(w, "%d\n%d\n%d\n%d\n",
-		race.EnableStrokeData, race.SplitDistance,
+		strokeData, race.SplitDistance,
 		race.SplitTime, race.NLanes); err != nil {
 		return err
 	}
