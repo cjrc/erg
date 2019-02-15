@@ -59,7 +59,12 @@ func ReadResults(results *[]Result, reader io.Reader) error {
 			return fmt.Errorf("invalid race time on line %d: %v", lineNumber, err)
 		}
 
-		tmp = strings.TrimSpace(strings.Replace(parts[4], ":", "m", -1) + "s")
+		// remove spaces and set the minutes marker to the format wanted by Go
+		tmp = strings.TrimSpace(strings.Replace(parts[4], ":", "m", -1))
+		if tmp == "" { // if there is no pace, set it to 0
+			tmp = "0"
+		}
+		tmp += "s" // add seconds marker
 		avgPace, err := time.ParseDuration(tmp)
 		if err != nil {
 			return fmt.Errorf("invalid average pace on line %d: %v", lineNumber, err)

@@ -26,7 +26,7 @@ type Race struct {
 	BoatType         uint   // one of the consts above
 	Name             string //16 char limit
 	Distance         uint   // in Meters
-	EnableStrokeData bool   
+	EnableStrokeData bool
 	SplitDistance    uint   // Split Distance in Meters
 	SplitTime        uint   // Split Time in Seconds
 	Boats            []Boat // len(boats) does not need to equal NLanes
